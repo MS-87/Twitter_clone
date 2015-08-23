@@ -21,6 +21,10 @@ class UserSignupTest < ActionDispatch::IntegrationTest
                                             password_confirmation: "password" }
     end
     assert_template 'users/show'
+    #this code makes sure that the user is signed in
+    #we defined is_logged_in? in the test_helper.rb
+    #Had to do this bc session_helper.rb is NOT available intests
+    assert is_logged_in?
 end
   
   

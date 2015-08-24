@@ -10,6 +10,10 @@ class SessionsController < ApplicationController
       # log_in is a function we define in the sessions_helper.rb module
       # It creates a temp cookie for the user
       log_in user
+      
+      #This governs the "remember me" checkbox
+      params[:session][:remember_me] == '1' ? remember(user) : forget(user)
+      
       redirect_to user
     else
       # Create an error message
@@ -22,7 +26,9 @@ class SessionsController < ApplicationController
   end
   
   def destroy
-    log_out
+    #have to add the if logged_in? since they might log out of the first browser
+    #and the second browser would throw an error
+    log_out if logged_in?
     redirect_to root_url
   end
   

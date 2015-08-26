@@ -14,7 +14,7 @@ class SessionsController < ApplicationController
       #This governs the "remember me" checkbox
       params[:session][:remember_me] == '1' ? remember(user) : forget(user)
       
-      redirect_to user
+      redirect_back_or user
     else
       # Create an error message
       #Since flash lives for 1 request, and render is NOT a new request

@@ -1,0 +1,21 @@
+<% provide(:title, 'All users') %>
+<h1>All users</h1>
+
+<!-- this comes from the will_paginate gem -->
+<%= will_paginate %>
+
+<ul class="users">
+  <!-- rails will iterate through users, and will do so witht he _users.html.erb
+  partial -->
+  <%= render @users %>
+</ul>
+
+<!--  Looks for any users in between the will_paginate calls.
+      Inside the users view, it looks for a users object.
+      and displays pagination links.
+      
+      We include this code above and below, so that it shows above and below
+      in our webapp
+-->
+
+<%= will_paginate %>

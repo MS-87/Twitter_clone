@@ -2,6 +2,15 @@ source 'https://rubygems.org'
 
 gem 'rails',          '4.2.0'
 gem 'bcrypt',         '3.1.7'
+
+#For generating dummy users
+gem 'faker',          '1.4.2'
+
+#For pagination and boostrap for said pagination
+gem 'will_paginate',  '3.0.7'
+gem 'bootstrap-will_paginate', '0.0.10'
+
+
 gem 'bootstrap-sass', '3.2.0.0'
 gem 'sass-rails',     '5.0.2'
 gem 'uglifier',       '2.5.3'

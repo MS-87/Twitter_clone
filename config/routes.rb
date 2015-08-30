@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   
 
+  get 'password_resets/new'
+
+  get 'password_resets/edit'
+
   #Routes for our pages:
   root              'static_pages#home'
   get 'help'    =>  'static_pages#help'
@@ -18,11 +22,11 @@ Rails.application.routes.draw do
   #"resources" provides all REST links for our resource... User
   resources :users
   
-  #Only provides edit for our activation
+  #Only provides the actions listed
   resources :account_activations, only: [:edit]
-
-
-
+  resources :password_resets,     only: [:new, :create, :edit, :update]
+  
+  
 
 
   #----------------------------------------

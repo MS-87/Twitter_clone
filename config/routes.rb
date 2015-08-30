@@ -17,7 +17,9 @@ Rails.application.routes.draw do
   
   #"resources" provides all REST links for our resource... User
   resources :users
-
+  
+  #Only provides edit for our activation
+  resources :account_activations, only: [:edit]
 
 
 

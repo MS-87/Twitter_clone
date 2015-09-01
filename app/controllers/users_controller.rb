@@ -16,6 +16,8 @@ class UsersController < ApplicationController
   
   def show
     @user = User.find(params[:id])
+    #the below has to be defined in order to also paginate by microposts
+    @microposts = @user.microposts.paginate(page: params[:page])
   end
   
   def new
@@ -71,13 +73,10 @@ class UsersController < ApplicationController
                                       :password_confirmation)
     end
     
-    def logged_in_user
-      unless logged_in?
-        store_location #defined in our helper, check it out.
-        flash[:danger] = "Please log in."
-        redirect_to login_url
-      end
-    end
+    ##Confirms a logged-in user
+    #def logged_in_user
+    ##Code for this moved to application_controller since micropost controller
+    ##needs to access it as well
     
     # Confirms the correct user.
     #Here we define the @user variable, so we don't need it in edit anymore

@@ -26,6 +26,10 @@ Rails.application.routes.draw do
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]
   
+  #Since all micropost interfacing is done through the user profile,
+  #we then don't need :edit/:new/:etc...
+  resources :microposts,          only: [:create, :destroy]
+  
   
 
 

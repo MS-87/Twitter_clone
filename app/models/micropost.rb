@@ -1,0 +1,20 @@
+class Micropost < ActiveRecord::Base
+  belongs_to :user
+  #The below ensures that we pull microposts newest on top.
+  default_scope -> { order(created_at: :desc) }
+  #governed by the gem 'CarrierWave'
+  mount_uploader :picture, PictureUploader
+  validates :user_id, presence: true
+  validates :content, presence: true, length: { maximum: 140 }
+  #validate (as opposed to validates) calls a custom defined validation
+  validate  :picture_size
+  
+  private
+  
+    #validates the size of an uploaded picture.
+    def picture_size
+      if picture.size > 5.megabytes
+        errors.add(:picture, "should be less than 5MB")
+      end
+    end
+end

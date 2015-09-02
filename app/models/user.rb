@@ -2,6 +2,22 @@ class User < ActiveRecord::Base
   
   #here dependent: :destroy ensures that microposts get destroyed if user does.
   has_many :microposts, dependent: :destroy
+  #Here we explicitly define what class and foreign key we refer to
+  #since active_relationships is not a model
+  has_many :active_relationships, class_name:  "Relationship",
+                                  foreign_key: "follower_id",
+                                  dependent:   :destroy
+  #this defines the passive relatoionship (aka BEING followed)
+  has_many :passive_relationships, class_name: "Relationship",
+                                   foreign_key: "followed_id",
+                                   dependent:   :destroy
+  #since the association is plural, it would be "followeds", so we explicitly
+  #tell it to call it "following" instead with the source: command
+  has_many :following, through: :active_relationships,  source: :followed
+  #below we don't need the :source since rails will singularize and look for  
+  #follower_id foreign key
+  has_many :followers, through: :passive_relationships
+                                  
   attr_accessor :remember_token, :activation_token, :reset_token
   before_save   :downcase_email
   before_create :create_activation_digest
@@ -84,8 +100,31 @@ class User < ActiveRecord::Base
     reset_sent_at < 2.hours.ago
   end
   
+  # Returns a user's status feed.
   def feed
-    Micropost.where("user_id = ?", id)
+    #Following_ids is the same as saying:
+    #.map(&:id)
+    #the code bellow pushes the set logic into the database which is more efficient
+    #insteady of pulling everything and doing the work on the model (less pulling)
+    following_ids = "SELECT followed_id FROM relationships
+                    WHERE follower_id = :user_id"
+    Micropost.where("user_id IN (#{following_ids})
+                    OR user_id = :user_id", user_id: id)
+  end
+  
+  #Follows a user
+  def follow(other_user)
+    active_relationships.create(followed_id: other_user.id)
+  end
+  
+  # Unfollows a user
+  def unfollow(other_user)
+    active_relationships.find_by(followed_id: other_user.id).destroy
+  end
+  
+  #Returns true if the user follows the other one
+  def following?(other_user)
+    following.include?(other_user)
   end
   
   private

@@ -20,7 +20,13 @@ Rails.application.routes.draw do
   
   
   #"resources" provides all REST links for our resource... User
-  resources :users
+  #The bellow also arranges to have /users/1/following and /.../followers
+  #member method arranges for the routes to respond to URLs containing user id.
+  resources :users do
+    member do
+      get :following, :followers
+    end
+  end
   
   #Only provides the actions listed
   resources :account_activations, only: [:edit]
@@ -29,6 +35,7 @@ Rails.application.routes.draw do
   #Since all micropost interfacing is done through the user profile,
   #we then don't need :edit/:new/:etc...
   resources :microposts,          only: [:create, :destroy]
+  resources :relationships,       only: [:create, :destroy]
   
   
 
